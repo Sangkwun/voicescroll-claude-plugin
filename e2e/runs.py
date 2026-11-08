@@ -9,6 +9,7 @@ The skills tell Claude to run their code in one command:
     (script)
     VOICESCROLL_SCRIPT_END
 """
+import ast
 import difflib
 import functools
 import json
@@ -61,6 +62,22 @@ def which_code(body):
     return skill if ratios[skill] >= 0.5 else None
 
 
+def runs_the_same(a, b):
+    """Whether two sources are the same program apart from comments and docstrings."""
+    def tree(src):
+        t = ast.parse(src)
+        for node in ast.walk(t):
+            body = getattr(node, "body", None)
+            if isinstance(body, list) and body and isinstance(body[0], ast.Expr) \
+                    and isinstance(body[0].value, ast.Constant) and isinstance(body[0].value.value, str):
+                node.body = body[1:] or [ast.Pass()]
+        return ast.dump(t)
+    try:
+        return tree(a) == tree(b)
+    except SyntaxError:
+        return False
+
+
 def code_copies(command):
     """[(skill, None if the same as SKILL.md, else a short description of the first differences)] for each heredoc of
     the command that holds a skill's code."""
@@ -72,6 +89,9 @@ def code_copies(command):
         want, got = code(skill).splitlines(), body.splitlines()
         if want == got:
             found.append((skill, None))
+            continue
+        if runs_the_same(code(skill), body):
+            found.append((skill, "same code; comments or docstrings left out"))
             continue
         diff = [d for d in difflib.unified_diff(want, got, lineterm="", n=0) if d[:1] in "+-" and d[:3] not in ("+++", "---")]
         found.append((skill, f"{len(diff)} lines differ: " + " | ".join(d[:70] for d in diff[:4])))
