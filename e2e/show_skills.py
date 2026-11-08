@@ -1,8 +1,12 @@
-"""Which skills each run called, the commands it ran, and the start of its answer.
+"""Which skills each run called, the commands it ran, whether the code it wrote out is the skill's code, and the
+start of its answer.
 
     python3 -I e2e/show_skills.py <run dir>...
 """
 import json, os, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from runs import report_code  # noqa: E402
 
 for d in sys.argv[1:]:
     skills, commands, answer, cost = [], [], "", None
@@ -19,4 +23,5 @@ for d in sys.argv[1:]:
     print(f"== {os.path.basename(d.rstrip('/'))}  skills {skills}  commands {len(commands)}  cost ${cost}")
     for c in commands:
         print("   $", c[:120].replace("\n", " ⏎ "))
+    report_code(d)
     print("   answer:", answer[:240].replace("\n", " ⏎ "))

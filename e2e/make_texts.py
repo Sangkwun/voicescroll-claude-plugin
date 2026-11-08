@@ -7,7 +7,10 @@ Headings become [bracketed] lines, as script-format writes them. Prints each scr
 """
 import glob, html, json, os, re, sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "voicescroll", "skills", "script-link", "scripts"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tests"))
+from skill_code import path  # noqa: E402
+
+sys.path.insert(0, os.path.dirname(path("script-link", "script_link")))
 from script_link import script_link  # noqa: E402
 
 REQUEST = {
