@@ -24,6 +24,11 @@ _dir = tempfile.mkdtemp(prefix="voicescroll-skill-code-")
 atexit.register(shutil.rmtree, _dir, True)
 
 
+def skills():
+    """The skill folders, not stray files such as .DS_Store."""
+    return sorted(d for d in os.listdir(SKILLS) if os.path.isdir(os.path.join(SKILLS, d)))
+
+
 def skill_md(skill):
     with open(os.path.join(SKILLS, skill, "SKILL.md"), encoding="utf-8") as f:
         return f.read()

@@ -20,7 +20,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PLUGIN = os.path.join(HERE, "..", "voicescroll")
 
 sys.path.insert(0, HERE)
-from skill_code import BLOCK, code, path  # noqa: E402
+from skill_code import BLOCK, code, path, skills  # noqa: E402
 
 # Add a module here only if it cannot open a connection.
 ALLOWED_IMPORTS = {"argparse", "base64", "re", "statistics", "sys", "unicodedata", "zlib"}
@@ -64,9 +64,6 @@ def readable_text(file):
         text = f.read()
     return BLOCK.sub(lambda m: code_text(m.group(1)), text)
 
-
-def skills():
-    return sorted(os.listdir(os.path.join(PLUGIN, "skills")))
 
 
 def plugin_files(suffix=""):

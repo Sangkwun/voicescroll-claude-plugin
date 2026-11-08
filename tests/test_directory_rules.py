@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PLUGIN = os.path.join(HERE, "..", "voicescroll")
 
 sys.path.insert(0, HERE)
-from skill_code import code, skill_md  # noqa: E402
+from skill_code import code, skill_md, skills  # noqa: E402
 
 TEXT = {".md", ".txt", ".json", ".yaml", ".yml"}
 IMAGES = {".png": b"\x89PNG\r\n\x1a\n", ".jpg": b"\xff\xd8\xff", ".jpeg": b"\xff\xd8\xff", ".gif": b"GIF8",
@@ -54,7 +54,7 @@ class DirectoryRuleTest(unittest.TestCase):
                 self.assertFalse(data.startswith(b"\xef\xbb\xbf"), "starts with a byte order mark")
 
     def test_code_comes_after_the_steps(self):
-        for skill in sorted(os.listdir(os.path.join(PLUGIN, "skills"))):
+        for skill in skills():
             with self.subTest(skill):
                 text = skill_md(skill)
                 self.assertTrue(text.startswith("---\nname: " + skill + "\n"))

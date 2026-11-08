@@ -13,14 +13,14 @@ The code at the end of this file counts what a person says in a script and divid
 2. Run the code in "The code" below with the text on standard input and the script's language, in one command:
 
    ```
-   f=$(mktemp) && cat > "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" --lang ko - <<'VOICESCROLL_SCRIPT_END'; rm -f "$f"
+   f=$(mktemp) && cat >| "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" --lang ko - <<'VOICESCROLL_SCRIPT_END'; s=$?; rm -f "$f"; (exit $s)
    (the code from "The code", every line exactly as written)
    VOICESCROLL_CODE_END
    (the script text)
    VOICESCROLL_SCRIPT_END
    ```
 
-   The command writes the code to a new temporary file, runs it, and deletes the file. If `python3` is not found, use `python`. If a line of the text is `VOICESCROLL_SCRIPT_END`, use a different end word that is not in the text, in both places. If the output says the code was not copied exactly, write the code again from "The code" and run the command again.
+   The command writes the code to a new temporary file, runs it, deletes the file, and keeps the code's exit status. If `python3` is not found, use `python`. If a line of the text is `VOICESCROLL_SCRIPT_END`, use a different end word that is not in the text, in both places. If the output says the code was not copied exactly, write the code again from "The code" and run the command again.
 
    Use a language code such as `ko`, `en`, `ja`, `zh-Hans`, `zh-Hant`, or `es`. If parts of the script are in different languages, run the code on each part with its own language and add the times. A few foreign words inside a sentence can stay with the sentence's language.
 3. Tell the user the typical time and the range from the `time:` line, rounded to about 5 seconds, for example "about 2 minutes, 1:45 to 2:15 depending on how fast you read".
@@ -33,7 +33,7 @@ The code at the end of this file counts what a person says in a script and divid
 1. Run the code with `--seconds` instead of the text, such as `--seconds 60` for a one-minute script:
 
    ```
-   f=$(mktemp) && cat > "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" --lang en --seconds 60; rm -f "$f"
+   f=$(mktemp) && cat >| "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" --lang en --seconds 60; s=$?; rm -f "$f"; (exit $s)
    (the code from "The code", every line exactly as written)
    VOICESCROLL_CODE_END
    ```
@@ -99,7 +99,7 @@ STUDIED = {
     "ru": ("words", 140, "irest"),
     "sv": ("words", 151, "irest"),
 }
-PACE_SUM = 6419  # every number in MEASURED and STUDIED added up, to catch a number copied wrong
+PACE_CHECK = 99287  # the numbers in MEASURED and STUDIED, in order, each times its place, to catch one copied wrong
 
 # Languages with no pace of their own use a closely related language's pace.
 RELATED = {"sk": "cs", "hr": "sr", "bs": "sr", "uk": "ru", "da": "nb", "no": "nb", "nn": "nb"}
@@ -202,7 +202,7 @@ def main(argv):
 
 if __name__ == "__main__":
     numbers = [n for v in MEASURED.values() for n in v[1:]] + [v[1] for v in STUDIED.values()]
-    if sum(numbers) != PACE_SUM or len(numbers) != 32 or len(RELATED) != 7:
+    if sum(i * n for i, n in enumerate(numbers, 1)) != PACE_CHECK or len(numbers) != 32 or len(RELATED) != 7:
         sys.exit("error: the code was not copied exactly. Write it again from the skill and run it again")
     error = main(sys.argv)
     if error:

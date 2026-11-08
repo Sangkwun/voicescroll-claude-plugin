@@ -3,15 +3,15 @@ Claude passed to the script the script in the prompt?
 
     python3 -I e2e/check_links.py <run dir>...
 
-The script in the prompt is everything after the first blank line. Only runs of the link code that printed a link
-count: a run that printed an error does not. A run given a file path is checked against that file in the run folder.
+The script in the prompt is everything after the first blank line. A run of the link code is a Bash call that holds
+the link code or printed a link; only runs that printed a link count: a run that printed an error does not. A run given a file path is checked against that file in the run folder.
 Each copy of a skill's code in the run is checked against SKILL.md.
 """
 import difflib, json, os, re, shlex, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tests"))
-from runs import code_copies, heredocs, report_code  # noqa: E402
+from runs import code_copies, report_code, text_bodies  # noqa: E402
 from skill_code import path  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(path("script-link", "script_link")))
@@ -31,7 +31,7 @@ def made(text):
 
 def passed_input(command):
     """The text a run passed in a heredoc, "<file> path" for a file, or "<other> command" for any other run."""
-    texts = [body for _, body in heredocs(command) if "import sys" not in body]
+    texts = text_bodies(command)
     if texts:
         return texts[-1]
     try:
@@ -51,19 +51,22 @@ def is_link_run(command):
 def check(d):
     prompt = open(os.path.join(d, "prompt.txt"), encoding="utf-8").read()
     script = prompt.split("\n\n", 1)[1] if "\n\n" in prompt else None
-    inputs, outputs, answer = {}, {}, ""
+    commands, outputs, answer = {}, {}, ""
     for line in open(os.path.join(d, "out.jsonl"), encoding="utf-8"):
         e = json.loads(line)
         if e.get("type") == "assistant":
             for c in e["message"]["content"]:
-                if c["type"] == "tool_use" and c["name"] == "Bash" and is_link_run(c["input"]["command"]):
-                    inputs[c["id"]] = passed_input(c["input"]["command"])
+                if c["type"] == "tool_use" and c["name"] == "Bash":
+                    commands[c["id"]] = c["input"]["command"]
         if e.get("type") == "user" and isinstance(e["message"].get("content"), list):
             for c in e["message"]["content"]:
-                if c.get("type") == "tool_result" and c["tool_use_id"] in inputs:
-                    outputs[c["tool_use_id"]] = LINK.findall(tool_text(c))
+                if c.get("type") == "tool_result" and c["tool_use_id"] in commands:
+                    links = LINK.findall(tool_text(c))
+                    if links or is_link_run(commands[c["tool_use_id"]]):
+                        outputs[c["tool_use_id"]] = links
         if e.get("type") == "result":
             answer = e.get("result", "")
+    inputs = {i: passed_input(commands[i]) for i in outputs}
     passed = [inputs[i] for i in inputs if outputs.get(i)]
     tool_links = [link for i in inputs for link in outputs.get(i, [])]
     answer_links = LINK.findall(answer)

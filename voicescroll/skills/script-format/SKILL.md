@@ -32,14 +32,14 @@ Everything outside brackets is text the reader says, and the app waits for it. S
 3. Check the result with the code in "The code" below, in one command:
 
    ```
-   f=$(mktemp) && cat > "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" - <<'VOICESCROLL_SCRIPT_END'; rm -f "$f"
+   f=$(mktemp) && cat >| "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" - <<'VOICESCROLL_SCRIPT_END'; s=$?; rm -f "$f"; (exit $s)
    (the code from "The code", every line exactly as written)
    VOICESCROLL_CODE_END
    (the script text)
    VOICESCROLL_SCRIPT_END
    ```
 
-   The command writes the code to a new temporary file, runs it, and deletes the file. If `python3` is not found, use `python`. If a line of the text is `VOICESCROLL_SCRIPT_END`, use a different end word that is not in the text, in both places. For a reader who uses other marks, put `--marks "()"` or `--marks "{}"` before the `-`. If the output says the code was not copied exactly, write the code again from "The code" and run the command again.
+   The command writes the code to a new temporary file, runs it, deletes the file, and keeps the code's exit status. If `python3` is not found, use `python`. If a line of the text is `VOICESCROLL_SCRIPT_END`, use a different end word that is not in the text, in both places. For a reader who uses other marks, put `--marks "()"` or `--marks "{}"` before the `-`. If the output says the code was not copied exactly, write the code again from "The code" and run the command again.
 
    The output lists each direction the app will find. Fix every `problem:` line and run the check again until it says `problems: none`. Also read the list: a direction you did not mean to make is a problem too.
 4. Show the formatted script in one plain text code block, so that the user can copy it exactly.
@@ -55,7 +55,7 @@ Everything outside brackets is text the reader says, and the app waits for it. S
 
 ## The code
 
-The check runs this code. It uses only the Python standard library and makes no network requests. Before it reads the script, it checks itself and stops if a character was copied wrong.
+The check runs this code. It uses only the Python standard library and makes no network requests. Before it reads the script, it checks the marks it reads and stops if one was copied wrong.
 
 ```python
 # Checks the directions in a VoiceScroll script, on standard input ("-") or in a file, the way the app reads them

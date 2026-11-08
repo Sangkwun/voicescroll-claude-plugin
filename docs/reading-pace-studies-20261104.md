@@ -2,7 +2,7 @@
 
 `voicescroll/skills/reading-time/SKILL.md` 끝 코드의 속도 표가 어디서 왔는지 적는다. 측정한 네 언어(ko · en · cs · zh)는
 VoiceScroll 이 영상 속 사람이 읽는 말투로 말한 것을 잰 값이다. 이 문서에는 그 숫자만 둔다(아래 «측정한 네 언어»). 나머지 언어의
-근거는 연구다. 시험(`tests/test_reading_time.py`)이 이 문서의 표를 읽어 코드의 값과 대조한다. 표를 고치면 코드와 `PACE_SUM` 도 고쳐야 시험이 통과한다.
+근거는 연구다. 시험(`tests/test_reading_time.py`)이 이 문서의 표를 읽어 코드의 값과 대조한다. 표를 고치면 코드와 `PACE_CHECK` 도 고쳐야 시험이 통과한다.
 
 ## 정한 것
 

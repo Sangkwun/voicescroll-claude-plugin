@@ -15,14 +15,14 @@ A VoiceScroll link carries the whole script inside it. The code at the end of th
 2. Run the code in "The code" below with that text on standard input, in one command:
 
    ```
-   f=$(mktemp) && cat > "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" - <<'VOICESCROLL_SCRIPT_END'; rm -f "$f"
+   f=$(mktemp) && cat >| "$f" <<'VOICESCROLL_CODE_END' && python3 "$f" - <<'VOICESCROLL_SCRIPT_END'; s=$?; rm -f "$f"; (exit $s)
    (the code from "The code", every line exactly as written)
    VOICESCROLL_CODE_END
    (the script text)
    VOICESCROLL_SCRIPT_END
    ```
 
-   The command writes the code to a new temporary file, runs it, and deletes the file. If `python3` is not found, use `python`. If a line of the text is `VOICESCROLL_SCRIPT_END`, use a different end word that is not in the text, in both places.
+   The command writes the code to a new temporary file, runs it, deletes the file, and keeps the code's exit status. If `python3` is not found, use `python`. If a line of the text is `VOICESCROLL_SCRIPT_END`, use a different end word that is not in the text, in both places.
 
    If the final text is already a plain-text file you can read, such as a file the user attached, put the file's path in place of `-` and leave out `<<'VOICESCROLL_SCRIPT_END'` and the text, so you don't type the script again.
 
@@ -46,7 +46,7 @@ A VoiceScroll link carries the whole script inside it. The code at the end of th
 
 ## The code
 
-The steps run this code. It uses only the Python standard library and makes no network requests. Before it reads the script, it checks itself against a known link and stops if a character was copied wrong.
+The steps run this code. It uses only the Python standard library and makes no network requests. Before it reads the script, it checks the link's start and encoding and stops if either was copied wrong.
 
 ```python
 # Makes VoiceScroll links (link format v1) for a script on standard input ("-") or in a file:
@@ -64,9 +64,22 @@ COPY_LIMIT = 10_000  # longer links get copied with mistakes, so a longer script
 BREAKS = (r"(\n(?:[ \t\r]*\n)+)", r"(\n)")  # where a script splits: paragraph breaks, then line breaks
 
 
+def encode(data):
+    """base64url without "=" padding."""
+    return base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
+
+
 def script_link(text):
-    data = zlib.compress(text.encode("utf-8"), 9)
-    return PREFIX + base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
+    return PREFIX + encode(zlib.compress(text.encode("utf-8"), 9))
+
+
+def copied_right():
+    """Check what a miscopy would break: the link's start, the encoding, and reading a link back. Another zlib
+    build may compress to other bytes, which the app reads too, so the link is read back, not compared."""
+    link = script_link("[smile] Hello.\n")
+    data = link[len("https://www.voice-scroll.com/s#v1."):]
+    return (link.startswith("https://www.voice-scroll.com/s#v1.") and encode(b"\xfb\xff") == "-_8"
+            and zlib.decompress(base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))) == b"[smile] Hello.\n")
 
 
 def fits(text):
@@ -129,7 +142,7 @@ def main(source):
 
 
 if __name__ == "__main__":
-    if script_link("[smile] Hello.\n") != "https://www.voice-scroll.com/s#v1.eNqLLs7NzEmNVfBIzcnJ1-MCACzTBR8":
+    if not copied_right():
         sys.exit("error: the code was not copied exactly. Write it again from the skill and run it again")
     error = main(sys.argv[1] if len(sys.argv) > 1 else "-")
     if error:

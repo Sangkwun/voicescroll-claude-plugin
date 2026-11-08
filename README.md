@@ -61,8 +61,11 @@ Verified 를 청하는 길은 없다(anthropics/claude-plugins-official#7024). �
   가리는 도구가 Markdown 으로 읽는다(Magika 1.1 셋 다 Markdown · `file` 은 Python 으로 읽는다 · Anthropic `skills/pdf/SKILL.md` 도 같다).
 - Claude 는 블록을 `mktemp` 임시 파일에 적고 대본을 표준 입력으로 넘겨 실행한 뒤 지운다(명령 한 줄 · heredoc 둘 · bash · zsh 확인).
   실행마다 새로 적는다. 옛 파일을 다시 쓰면 낡은 코드가 돈다.
-- 코드는 옮겨 적다 틀리면 스스로 멈춘다(«the code was not copied exactly»). 링크는 알려진 링크 하나(`[smile] Hello.\n` · `-` 글자와
-  지운 `=` 와 9 단계를 모두 탄다)와 견주고, 읽는 시간은 속도 숫자 32 개의 합과 수를, 검사는 전각 괄호 접기를 견준다.
+- 코드는 핵심 값을 옮겨 적다 틀리면 스스로 멈춘다(«the code was not copied exactly»). 링크는 링크 머리 · base64url 글자
+  (`-` `_` · `=` 빼기) · 되읽기를, 읽는 시간은 속도 숫자 32 개에 자리 번호를 곱한 합(`PACE_CHECK` · 두 숫자를 바꿔 적어도 잡는다)을,
+  검사는 전각 괄호 접기를 본다. 함수 몸을 틀리게 옮긴 것은 못 잡는다. 그것은 e2e 가 SKILL.md 와 글자까지 견준다.
+  링크는 고정 링크와 견주지 않는다. zlib-ng 같은 다른 zlib 은 다른 바이트를 내고, 앱은 그것도 읽는다.
+- 명령은 `cat >|` 로 적어 noclobber 셸에서도 돌고, `s=$?; rm -f "$f"; (exit $s)` 로 코드의 종료 상태를 남긴다.
 - 시험은 `tests/skill_code.py` 로 블록을 뽑아 예전 파일과 같은 모듈 이름으로 부른다. `test_directory_rules.py` 가 파일 규칙을 지킨다.
 - `plugin.json` 의 `icon` · `supportUrl` · `privacyPolicyUrl` 은 포털이 경고해도 둔다. 디렉터리가 목록에 읽는 칸이다
   (code.claude.com `plugins/manifest-reference` «Anthropic's directory reads the `icon`, …, `supportUrl`, `privacyPolicyUrl` … fields»).
