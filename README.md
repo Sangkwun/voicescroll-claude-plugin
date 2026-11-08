@@ -21,19 +21,21 @@ voicescroll/                      플러그인 폴더 — 설치하는 사람이
 LICENSE                           voicescroll/LICENSE 와 같은 MIT — GitHub 가 저장소의 라이선스로 읽는다
 e2e/                              플러그인 밖 — Claude Code 끝에서 끝 시험(링크 옮겨 적기 · 스킬 고르기)
   run.sh                          이 플러그인만 실은 claude -p 한 번
-  make_texts.py · check_links.py · show_skills.py · sel/   대본 만들기 · 링크 대조 · 부른 스킬 · 고르기 물음
+  make_texts.py · check_links.py · show_skills.py · runs.py · sel/   대본 만들기 · 링크 대조 · 부른 스킬 · 코드 복사 대조 · 고르기 물음
 tests/                            플러그인 밖 — 사용자에게 가지 않는다
   test_script_link.py             공유 벡터 대조 · 명령 줄
   test_reading_time.py            속도가 근거 문서의 표와 같은지 · 세기 · 명령 줄
   test_script_format.py           지시문 찾기가 앱 시험의 경우와 같은지 · 잘못 쓴 괄호 · 명령 줄
   test_no_network.py              바깥 요청 0
   test_directory_rules.py         플러그인 폴더가 디렉터리의 파일 규칙(비 Verified 조직)을 지키는지
+  test_skill_commands.py          SKILL.md 의 명령을 그대로 bash · zsh(noclobber 포함)로 · 핵심 값을 틀리게 옮기면 멈추는지
   skill_code.py                   SKILL.md 의 python 블록을 파일로 적어 시험 · e2e 가 불러 쓴다
   vectors/link-vectors-v1.json    공유 벡터 사본
 docs/                             플러그인 밖
   reading-pace-studies-20261104.md    읽는 시간 속도의 근거(측정한 네 언어의 숫자 · 연구 둘 · 정한 규칙)
   coupe-recount-20261104.py           Coupé 2019 데이터를 우리 셈법으로 다시 세는 코드
   skill-e2e-20261108.md               끝에서 끝 시험 결과(링크 상한 · 스킬 고르기)
+  skill-e2e-20261109.md               코드를 SKILL.md 로 옮긴 뒤 끝에서 끝 시험(코드 옮겨 적기)
 ```
 
 - 플러그인을 하위 폴더에 둔다. 시험 · 벡터 · 이 문서가 사용자에게 가지 않게 한다. 디렉터리 검증은 플러그인 폴더만 센다
