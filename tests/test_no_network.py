@@ -1,8 +1,9 @@
 """The plugin makes no outside requests.
 
-Three checks: scripts import only standard-library modules that cannot reach a
-network; plugin files name no host but voice-scroll.com; and on macOS each script
-runs the same with the network denied by sandbox-exec.
+Three checks: the skills' code (the python block in each SKILL.md) imports only
+standard-library modules that cannot reach a network; plugin files name no host but
+voice-scroll.com; and on macOS each skill's code runs the same with the network
+denied by sandbox-exec.
 """
 
 import ast
@@ -18,6 +19,9 @@ import unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 PLUGIN = os.path.join(HERE, "..", "voicescroll")
 
+sys.path.insert(0, HERE)
+from skill_code import BLOCK, code, path  # noqa: E402
+
 # Add a module here only if it cannot open a connection.
 ALLOWED_IMPORTS = {"argparse", "base64", "re", "statistics", "sys", "unicodedata", "zlib"}
 
@@ -32,11 +36,11 @@ BARE_HOST = re.compile(r"(?i)\b((?:[a-z0-9-]+\.)+[a-z]{2,})\b")
 # File names and Python attribute chains the bare-host pattern also matches.
 NOT_HOSTS = re.compile(r"(?i)\.(md|py|json|txt|png|zip|plugin|swift|ts)$|^(base64|zlib|sys|os|f|e|raw|script|self|node|out|claude-plugin)\.")
 
-# A script, its arguments, and its stdin.
+# A skill, the module name its code is written to, the code's arguments, and its stdin.
 RUNS = [
-    (os.path.join(PLUGIN, "skills", "script-link", "scripts", "script_link.py"), ["-"], "[박수]\n안녕하세요\n"),
-    (os.path.join(PLUGIN, "skills", "reading-time", "scripts", "reading_time.py"), ["--lang", "ko", "-"], "[박수]\n안녕하세요\n"),
-    (os.path.join(PLUGIN, "skills", "script-format", "scripts", "check_script.py"), ["-"], "[박수]\n안녕하세요 [이름\n"),
+    ("script-link", "script_link", ["-"], "[박수]\n안녕하세요\n"),
+    ("reading-time", "reading_time", ["--lang", "ko", "-"], "[박수]\n안녕하세요\n"),
+    ("script-format", "check_script", ["-"], "[박수]\n안녕하세요 [이름\n"),
 ]
 
 
@@ -44,18 +48,25 @@ RUNS = [
 TEXT_TOKENS = {tokenize.STRING, tokenize.COMMENT} | {getattr(tokenize, "FSTRING_MIDDLE", tokenize.STRING)}
 
 
-def readable_text(path):
-    """Where a file could name a host: all of a text file, or a script's literals and comments.
+def code_text(source):
+    """Where code could name a host: its literals and comments.
 
-    A script's code is checked by the import test; its attribute chains (``text.split``)
+    The code itself is checked by the import test; its attribute chains (``text.split``)
     look like host names to the pattern, so code tokens are not scanned.
     """
-    with open(path, encoding="utf-8") as f:
-        text = f.read()
-    if not path.endswith(".py"):
-        return text
-    tokens = tokenize.generate_tokens(io.StringIO(text).readline)
+    tokens = tokenize.generate_tokens(io.StringIO(source).readline)
     return "\n".join(t.string for t in tokens if t.type in TEXT_TOKENS)
+
+
+def readable_text(file):
+    """Where a file could name a host: all of its text, but only the literals and comments of a python block."""
+    with open(file, encoding="utf-8") as f:
+        text = f.read()
+    return BLOCK.sub(lambda m: code_text(m.group(1)), text)
+
+
+def skills():
+    return sorted(os.listdir(os.path.join(PLUGIN, "skills")))
 
 
 def plugin_files(suffix=""):
@@ -67,11 +78,10 @@ def plugin_files(suffix=""):
 
 
 class NoNetworkTest(unittest.TestCase):
-    def test_scripts_import_only_allowed_modules(self):
-        for path in plugin_files(".py"):
-            with self.subTest(os.path.relpath(path, PLUGIN)):
-                with open(path, encoding="utf-8") as f:
-                    tree = ast.parse(f.read())
+    def test_code_imports_only_allowed_modules(self):
+        for skill in skills():
+            with self.subTest(skill):
+                tree = ast.parse(code(skill))
                 names = set()
                 for node in ast.walk(tree):
                     if isinstance(node, ast.Import):
@@ -85,24 +95,24 @@ class NoNetworkTest(unittest.TestCase):
                 self.assertLessEqual(names, ALLOWED_IMPORTS)
 
     def test_files_name_no_other_host(self):
-        for path in plugin_files():
-            if path.endswith(".png"):
+        for file in plugin_files():
+            if file.endswith(".png"):
                 continue
-            with self.subTest(os.path.relpath(path, PLUGIN)):
-                text = readable_text(path)
+            with self.subTest(os.path.relpath(file, PLUGIN)):
+                text = readable_text(file)
                 hosts = {h.lower() for h in URL_HOST.findall(text)}
                 hosts |= {h.lower() for h in BARE_HOST.findall(text) if not NOT_HOSTS.search(h)}
                 self.assertLessEqual(hosts, ALLOWED_HOSTS)
 
-    def test_every_script_is_run_here(self):
-        found = {os.path.normpath(p) for p in plugin_files(".py")}
-        self.assertEqual(found, {os.path.normpath(r[0]) for r in RUNS})
+    def test_every_skill_code_is_run_here(self):
+        self.assertEqual(skills(), sorted(r[0] for r in RUNS))
 
     @unittest.skipUnless(sys.platform == "darwin" and shutil.which("sandbox-exec"), "macOS sandbox-exec only")
     def test_scripts_run_with_network_denied(self):
         deny = "(version 1)(allow default)(deny network*)"
-        for script, args, stdin in RUNS:
-            with self.subTest(os.path.relpath(script, PLUGIN)):
+        for skill, module, args, stdin in RUNS:
+            script = path(skill, module)
+            with self.subTest(skill):
                 free = subprocess.run([sys.executable, "-I", script, *args], input=stdin.encode(), capture_output=True)
                 boxed = subprocess.run(
                     ["sandbox-exec", "-p", deny, sys.executable, "-I", script, *args],

@@ -14,7 +14,10 @@ import unittest
 sys.dont_write_bytecode = True
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SCRIPT = os.path.join(HERE, "..", "voicescroll", "skills", "script-format", "scripts", "check_script.py")
+sys.path.insert(0, HERE)
+from skill_code import path  # noqa: E402
+
+SCRIPT = path("script-format", "check_script")  # the python block of the skill's SKILL.md
 
 sys.path.insert(0, os.path.dirname(SCRIPT))
 from check_script import FOLD, MARKS, check  # noqa: E402

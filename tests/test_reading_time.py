@@ -17,7 +17,10 @@ import unittest
 sys.dont_write_bytecode = True
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SCRIPT = os.path.join(HERE, "..", "voicescroll", "skills", "reading-time", "scripts", "reading_time.py")
+sys.path.insert(0, HERE)
+from skill_code import path  # noqa: E402
+
+SCRIPT = path("reading-time", "reading_time")  # the python block of the skill's SKILL.md
 STUDIES = os.path.join(HERE, "..", "docs", "reading-pace-studies-20261104.md")
 
 sys.path.insert(0, os.path.dirname(SCRIPT))

@@ -22,7 +22,10 @@ import zlib
 sys.dont_write_bytecode = True
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SCRIPT = os.path.join(HERE, "..", "voicescroll", "skills", "script-link", "scripts", "script_link.py")
+sys.path.insert(0, HERE)
+from skill_code import path  # noqa: E402
+
+SCRIPT = path("script-link", "script_link")  # the python block of the skill's SKILL.md
 VECTORS = os.path.join(HERE, "vectors", "link-vectors-v1.json")
 
 # sha256 of the copy of the apps' shared reader vectors (iOS a7b711df).
