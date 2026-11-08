@@ -24,6 +24,7 @@ voicescroll/                      플러그인 폴더 — 설치하는 사람이
     reading-time/                 읽는 시간 어림 · 시간에 맞는 길이
       SKILL.md
       scripts/reading_time.py
+LICENSE                           voicescroll/LICENSE 와 같은 MIT — GitHub 가 저장소의 라이선스로 읽는다
 e2e/                              플러그인 밖 — Claude Code 끝에서 끝 시험(링크 옮겨 적기 · 스킬 고르기)
   run.sh                          이 플러그인만 실은 claude -p 한 번
   make_texts.py · check_links.py · show_skills.py · sel/   대본 만들기 · 링크 대조 · 부른 스킬 · 고르기 물음
