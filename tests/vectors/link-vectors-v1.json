@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "about": "VS-0589 script link, v1: https://www.voice-scroll.com/s#v1.<base64url(zlib(UTF-8 script))>. Each case is a link and what a reader keeps from it (expected, after line breaks are made \\n and blank ends are taken off, as text shared from another app is) or the failure it reports. Links here were written by Python's zlib, not by the app. iOS: tests/VoiceScrollCoreTests/ScriptLinkTests.swift. Mac, Android and web must read every case the same. Definition: voicescroll docs/script-link-ios-20261104.md §2.",
+  "cueRule": "[]",
+  "cases": [
+    {
+      "name": "ko",
+      "link": "https://www.voice-scroll.com/s#v1.eNoVysEJhDAUBcB7qvgFSGoUzEowHg1mRVFQQcGDoIgHK_K99LDsnIfe4uOjDzQ3myoR1hv6DZfRimFCEdilwszKe-8oZnZGmJfv3ka_wlm4SSuF5eGQSvxWWM9_wXHStRwH_QPF4D0M",
+      "expected": "안녕하세요, 여러분.\n오늘은 새 기능을 소개합니다.\n\n먼저 화면을 보시죠."
+    },
+    {
+      "name": "en",
+      "link": "https://www.voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "expected": "Hello, everyone.\nToday I'll walk you through the new feature.\n\nLet's start with the screen."
+    },
+    {
+      "name": "cue-marks-stay",
+      "link": "https://www.voice-scroll.com/s#v1.eNqLfr1h6puOGbFcb6aveT1_zettLToKrzfMeLVh4puura-7O153L9Hjin4zb8Gb7jkKr1d2vNm2JFbhzYwlr7tmvJk7Q-HN4j1vFsx53TVFIdoxrySjKL8gMxkoP68VqhUA5s04LA",
+      "expected": "[박수]\n여러분, 반갑습니다.\n[잠시 멈춤] 오늘의 주제는 [Anthropic] 입니다.",
+      "about": "Direction marks are the script's text; the reader's rule shows them as directions."
+    },
+    {
+      "name": "ko-over-300",
+      "link": "https://www.voice-scroll.com/s#v1.eNrtzb0JgDAAhNFVMoEz-ldIYmERQYIRBNHGImAECyfyzh3UQjewS3vcx6NxGGdILTANtLtgVqBvabxAGWPZaHNBnUAVUEP0jfH9r866eUqmM7qStrlje7jkSaA85fpWDEpQghKUv5QLSasLEg",
+      "expected": "우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다. 우리는 매일 새로운 대본을 씁니다. 대본은 말하는 사람의 생각을 담습니다.",
+      "about": "Over the free 300 characters: kept all the same (the door is at «읽기 시작»)."
+    },
+    {
+      "name": "compress-level-1",
+      "link": "https://www.voice-scroll.com/s#v1.eAElyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "expected": "Hello, everyone.\nToday I'll walk you through the new feature.\n\nLet's start with the screen.",
+      "about": "Any zlib level reads the same."
+    },
+    {
+      "name": "crlf",
+      "link": "https://www.voice-scroll.com/s#v1.eNp7s2m1wpslLbxcryfOeLN8B4QNAIaBCz8",
+      "expected": "첫 줄\n둘째 줄",
+      "about": "Line breaks to \\n, blank ends off — as shared text."
+    },
+    {
+      "name": "padding-accepted",
+      "link": "https://www.voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q==",
+      "expected": "Hello, everyone.\nToday I'll walk you through the new feature.\n\nLet's start with the screen.",
+      "about": "base64url padding is not written, but read."
+    },
+    {
+      "name": "reserved-part-skipped",
+      "link": "https://www.voice-scroll.com/s#v1.eNoVysEJhDAUBcB7qvgFSGoUzEowHg1mRVFQQcGDoIgHK_K99LDsnIfe4uOjDzQ3myoR1hv6DZfRimFCEdilwszKe-8oZnZGmJfv3ka_wlm4SSuF5eGQSvxWWM9_wXHStRwH_QPF4D0M.t7Jes7JWI",
+      "expected": "안녕하세요, 여러분.\n오늘은 새 기능을 소개합니다.\n\n먼저 화면을 보시죠.",
+      "about": "What follows a second '.' is for later fields; a v1 reader skips it."
+    },
+    {
+      "name": "bare-domain",
+      "link": "https://voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "expected": "Hello, everyone.\nToday I'll walk you through the new feature.\n\nLet's start with the screen.",
+      "about": "voice-scroll.com without www reads the same."
+    },
+    {
+      "name": "trailing-slash",
+      "link": "https://www.voice-scroll.com/s/#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "expected": "Hello, everyone.\nToday I'll walk you through the new feature.\n\nLet's start with the screen."
+    },
+    {
+      "name": "emoji-rtl",
+      "link": "https://www.voice-scroll.com/s#v1.eNoBHwDg_9mF2LHYrdio2Kcg2KjZg9mFIPCfkYsK16nXnNeV151OVRRu",
+      "expected": "مرحبا بكم 👋\nשלום"
+    },
+    {
+      "name": "newer-version",
+      "link": "https://www.voice-scroll.com/s#v2.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "failure": "newerLink"
+    },
+    {
+      "name": "newer-version-no-data",
+      "link": "https://www.voice-scroll.com/s#v12",
+      "failure": "newerLink"
+    },
+    {
+      "name": "no-fragment",
+      "link": "https://www.voice-scroll.com/s",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "no-version",
+      "link": "https://www.voice-scroll.com/s#eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "v0",
+      "link": "https://www.voice-scroll.com/s#v0.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "leading-zero-version",
+      "link": "https://www.voice-scroll.com/s#v01.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "empty-data",
+      "link": "https://www.voice-scroll.com/s#v1.",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "cut-short",
+      "link": "https://www.voice-scroll.com/s#v1.eNrtzb0JgDAAhNFVMoEz-ldIYmERQYIRBNHGImAECyfyzh3UQjewS3vcx6NxGGdILTANtLtgVqBvabxAGWPZaHNBnUAVUEP0jfH9r866eUqmM7qStrlje7jkSaA85fpWDEpQgh",
+      "failure": "brokenLink",
+      "about": "A link cut by a chat app or a copy that missed its end."
+    },
+    {
+      "name": "one-bit-changed",
+      "link": "https://www.voice-scroll.com/s#v1.eNoVysEJhDAUBcB7qvgFSGoUzEowHg1mRVFQQcGDoIgHK_K99LDsnIfe4uOjDzQ3myoR1hr6DZfRimFCEdilwszKe-8oZnZGmJfv3ka_wlm4SSuF5eGQSvxWWM9_wXHStRwH_QPF4D0M",
+      "failure": "brokenLink",
+      "about": "zlib's Adler-32 (or the stream) catches it."
+    },
+    {
+      "name": "raw-deflate-no-header",
+      "link": "https://www.voice-scroll.com/s#v1.JcoxCoAwEATA3ldsZyO-Q8HSDwRdjXjk4HIx5PcKVtPMRBEdwIfWNHHsVt1Dw9yLoAa50bTAo2k54yeRWHEweLEvdwu9z8gezFEv_0vejEzjCw",
+      "failure": "brokenLink",
+      "about": "zlib (RFC 1950), not raw deflate."
+    },
+    {
+      "name": "not-base64",
+      "link": "https://www.voice-scroll.com/s#v1.%%%%",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "trailing-bytes",
+      "link": "https://www.voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Xh4",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "not-utf8",
+      "link": "https://www.voice-scroll.com/s#v1.eNrbd2LzcwAHoQMh",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "inflates-past-limit",
+      "link": "https://www.voice-scroll.com/s#v1.eNrtwTEBAAAAwqCs61_CEL5AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACcBiy_W1I",
+      "failure": "tooLarge",
+      "about": "1 MiB + 1 byte of script: the import limit, met while inflating."
+    },
+    {
+      "name": "inflates-to-limit",
+      "link": "https://www.voice-scroll.com/s#v1.eNrtwkERAAAIA6CsNjGSuZZiIfzCkduoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj5OAfPs_R8",
+      "expected": null,
+      "about": "Exactly 1 MiB: read (expected is the text — not stored here)."
+    },
+    {
+      "name": "empty-script",
+      "link": "https://www.voice-scroll.com/s#v1.eNpTUODiUgAAAXcAdQ",
+      "failure": "empty"
+    },
+    {
+      "name": "reserved-part-with-percent-skipped",
+      "link": "https://www.voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q.%FF",
+      "expected": "Hello, everyone.\nToday I'll walk you through the new feature.\n\nLet's start with the screen.",
+      "about": "A later field is skipped whatever it holds — split before percent-decoding."
+    },
+    {
+      "name": "huge-version-newer",
+      "link": "https://www.voice-scroll.com/s#v9223372036854775808.x",
+      "failure": "newerLink",
+      "about": "Any version number past 1, of any length."
+    },
+    {
+      "name": "wrong-padding",
+      "link": "https://www.voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q=",
+      "failure": "brokenLink",
+      "about": "Padding, when present, makes the length a multiple of 4."
+    },
+    {
+      "name": "excess-padding",
+      "link": "https://www.voice-scroll.com/s#v1.eNolyjEKgDAQBMDeV2xnI75DwdIPBF2NeOTgcjHk9wpW08xEER3Ah9Y0cexW3UPD3IugBrnRtMCjaTnjJ5FYcTB4sS93C73PyB7MUS__S96MTOMLu3wf7Q======",
+      "failure": "brokenLink"
+    },
+    {
+      "name": "standard-base64-alphabet",
+      "link": "https://www.voice-scroll.com/s#v1.eNpjYGRiZmFlY+fg5OLm4eXjFxAUEhYRFROXkJSSlpGVk1dQVFJWUVVT19DU0tbR1dM3MDQyNjE1M7ewtLK2sbWzd3B0cnZxdXP38PTy9vH18w8IDAoOCQ0Lj4iMio6JjYtPSExKTklNS8/IzMrOyc3LLygsKi4pLSuvqKyqrqmtq29obGpuaW1r7+js6u7p7eufMHHS5ClTp02fMXPW7Dlz581fsHDR4iVLly1fsXLV6jVr163fsHHT5i1bt23fsXPX7j179+0/cPDQ4SNHjx0/cfLU6TNnz52/cPHS5StXr12/cfPW7Tt3791/8PDR4ydPnz1/8fLV6zdv373/8PHT5y9fv33/8fPX7z9///1nGPX/qP9HsP8B5Mn+EA",
+      "failure": "brokenLink",
+      "about": "base64url only: '+' and '/' are not in it."
+    },
+    {
+      "name": "control-characters",
+      "link": "https://www.voice-scroll.com/s#v1.eNpLZEykOQQA0IsTJQ",
+      "failure": "notText",
+      "about": "More control characters than text has (over 0.5 %)."
+    },
+    {
+      "name": "cut-at-limit",
+      "link": "https://www.voice-scroll.com/s#v1.eNrtwkERAAAIA6CsNjGSuZZiIfzCkduoqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj5OAfPs_Q",
+      "failure": "brokenLink",
+      "about": "Exactly 1 MiB, its last checksum byte cut: broken, not too large."
+    }
+  ]
+}

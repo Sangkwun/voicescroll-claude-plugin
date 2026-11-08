@@ -1,0 +1,7 @@
+Add [pause] and [smile] cues to this script where they fit.
+
+If you've searched for "auto scroll text" or "an app that scrolls text for you," you've probably found tools that do very different jobs. Some scroll web pages or a feed so you don't have to swipe. Some run a ticker across a display. This guide is about the third kind: an auto-scrolling teleprompter, which moves a script you're reading out loud on camera, on stage, or in a meeting.
+Teleprompters split into two kinds as well. One moves your script at a fixed speed you set ahead of time. The other listens to your voice and moves the text as fast, or as slow, as you actually talk. They feel nothing alike to use, and a lot of people don't realize the second kind exists until they try it.
+[The two kinds of auto-scroll]
+[Fixed-speed scrolling]
+This is the classic teleprompter. You paste your script, pick a scroll speed, hit play, and the text crawls upward at that rate.

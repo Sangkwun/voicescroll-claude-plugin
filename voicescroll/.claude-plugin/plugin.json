@@ -1,0 +1,15 @@
+{
+  "name": "voicescroll",
+  "displayName": "VoiceScroll",
+  "version": "0.1.0",
+  "description": "Format a script you wrote with Claude for the VoiceScroll teleprompter app, see how long it takes to read aloud, and open it in the app with a link. The link carries the script itself, and the plugin sends the script to no server.",
+  "author": {
+    "name": "VoiceScroll",
+    "url": "https://www.voice-scroll.com"
+  },
+  "homepage": "https://www.voice-scroll.com",
+  "supportUrl": "https://www.voice-scroll.com/support",
+  "privacyPolicyUrl": "https://www.voice-scroll.com/privacy",
+  "icon": "./.claude-plugin/icon.png",
+  "license": "MIT"
+}
