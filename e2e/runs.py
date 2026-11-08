@@ -119,4 +119,7 @@ def report_code(run_dir):
     """Print one line per code copy in the run."""
     for _, command in bash_commands(run_dir):
         for skill, diff in code_copies(command):
-            print(f"   code {skill}: " + ("same as SKILL.md" if diff is None else "DIFFERENT · " + diff))
+            if diff is None or diff.startswith("same code"):
+                print(f"   code {skill}: " + (diff or "same as SKILL.md"))
+            else:
+                print(f"   code {skill}: DIFFERENT · " + diff)
