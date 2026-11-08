@@ -9,7 +9,7 @@ Ask Claude to write a script for VoiceScroll, or to format one you have, for exa
 Ask Claude for a VoiceScroll link, for example "Send this script to VoiceScroll". Claude passes the script to a small script in this plugin that turns it into a link. Open the link on your phone, or on a computer.
 
 - If VoiceScroll is installed on your iPhone, iPad, or Android device, the link opens the app, which asks before it adds the script. The free version of VoiceScroll lets you start reading a script of up to 300 characters, counting spaces.
-- On a computer, or without the app, the link opens a page on voice-scroll.com that shows the script with a button to copy it. On a computer screen, the page also shows a QR code for a short script, to open the link on your phone.
+- Without the app, or when the link opens in a browser, the link opens a page on voice-scroll.com that shows the script with a button to copy it. On a computer screen, the page also shows a QR code for a short script, to open the link on your phone.
 
 A script longer than about 15 to 30 minutes of speech, depending on the language, comes as several links, because Claude can make mistakes when it copies a very long link. Each part opens as its own script.
 

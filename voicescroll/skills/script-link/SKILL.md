@@ -32,7 +32,7 @@ A VoiceScroll link carries the whole script inside it. A script in this skill ma
    - If the script printed several links, give each one in the same order, with its part number in the label, such as `[VoiceScroll 에서 열기 (1/3)](...)`. Tell the user that each part opens as its own script in VoiceScroll.
 4. Say in one or two sentences what happens when the user opens it:
    - On an iPhone, iPad, or Android device with VoiceScroll installed, the link opens the app, which asks before it adds the script.
-   - On a computer, or without the app, the link opens a page on voice-scroll.com that shows the script, with a button to copy it. On a computer screen, for a short script, the page also shows a QR code to open the link on a phone.
+   - Without the app, or when the link opens in a browser, the link opens a page on voice-scroll.com that shows the script, with a button to copy it. On a computer screen, for a short script, the page also shows a QR code to open the link on a phone.
 
 ## Don't
 
